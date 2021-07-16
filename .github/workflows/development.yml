@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        go-version: [1.16]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Build
+        run: |
+          mkdir bin
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-linux-amd64
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-linux-arm64
+          CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-linux-ppc64le
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-windows-amd64.exe
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-darwin-amd64
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-darwin-arm64
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: sftpgo-plugin-kms
+          path: bin
