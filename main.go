@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/go-hclog"
@@ -18,6 +19,11 @@ import (
 )
 
 const version = "0.9.0-dev"
+
+var (
+	commitHash = ""
+	date       = ""
+)
 
 var appLogger = hclog.New(&hclog.LoggerOptions{
 	DisableTime: true,
@@ -107,8 +113,22 @@ func (k *GoCloudKMS) Decrypt(payload, key, additionalData string, mode int, URL,
 	return decrypted, nil
 }
 
+func getVersionString() string {
+	var sb strings.Builder
+	sb.WriteString(version)
+	if commitHash != "" {
+		sb.WriteString("-")
+		sb.WriteString(commitHash)
+	}
+	if date != "" {
+		sb.WriteString("-")
+		sb.WriteString(date)
+	}
+	return sb.String()
+}
+
 func main() {
-	appLogger.Info("starting sftpgo-kms-plugin", "version", version)
+	appLogger.Info("starting sftpgo-kms-plugin", "version", getVersionString())
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: kmsplugin.Handshake,
 		Plugins: map[string]plugin.Plugin{
