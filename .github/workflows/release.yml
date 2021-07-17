@@ -1,16 +1,15 @@
-name: Build
+name: Release
 
 on:
   push:
-    branches: [main]
-  pull_request:
+    tags: 'v*'
 
 env:
-  GO_VERSION: 1.16
+  GO_VERSION: 1.16.6
 
 jobs:
   build:
-    name: Build
+    name: Build and Release
     runs-on: ubuntu-latest
 
     steps:
@@ -31,8 +30,11 @@ jobs:
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-darwin-amd64
           CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o bin/sftpgo-plugin-kms-darwin-arm64
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: sftpgo-plugin-kms
-          path: bin
+      - name: Create release
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          gh release create "${VERSION}" -t "${VERSION}"
+          gh release upload "${VERSION}" bin/* --clobber
+          gh release view "${VERSION}"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
