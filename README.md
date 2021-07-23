@@ -5,9 +5,7 @@
 
 This plugin adds support for additional KMS secret providers to [SFTPGo](https://github.com/drakkan/sftpgo/).
 
-## Supported Services
-
-This plugin use [Go CDK](https://gocloud.dev/howto/secrets/) to access several key management services in a portable way.
+## Configuration
 
 The supported services can be configured within the `plugins` section of the SFTPGo configuration file. This is an example configuration.
 
@@ -37,6 +35,10 @@ The supported services can be configured within the `plugins` section of the SFT
 
 In the above example we enabled the [transit secrets engine](https://www.vaultproject.io/docs/secrets/transit/index.html) in [Vault](https://www.vaultproject.io/).
 
+## Supported Services
+
+This plugin use [Go CDK](https://gocloud.dev/howto/secrets/) to access several key management services in a portable way.
+
 ### Google Cloud Key Management Service
 
 To use keys from Google Cloud Platform’s [Key Management Service](https://cloud.google.com/kms/) (GCP KMS) you have to use `gcpkms` as URL scheme like this.
@@ -45,7 +47,7 @@ To use keys from Google Cloud Platform’s [Key Management Service](https://clou
 gcpkms://projects/[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEY_RING]/cryptoKeys/[KEY]
 ```
 
-SFTPGo will use Application Default Credentials. See [here](https://cloud.google.com/docs/authentication/production) for alternatives such as environment variables.
+This plugin will use Application Default Credentials. See [here](https://cloud.google.com/docs/authentication/production) for alternatives such as environment variables.
 
 The URL host+path are used as the key resource ID; see [here](https://cloud.google.com/kms/docs/object-hierarchy#key) for more details.
 
@@ -66,7 +68,7 @@ Here are some examples:
 - By alias: `awskms://alias/ExampleAlias?region=us-east-1`
 - By ARN: `arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34bc-56ef-1234567890ab?region=us-east-1`
 
-SFTPGo will use the default AWS session. See [AWS Session](https://docs.aws.amazon.com/sdk-for-go/api/aws/session/) to learn about authentication alternatives such as environment variables.
+This plugin will use the default AWS session. See [AWS Session](https://docs.aws.amazon.com/sdk-for-go/api/aws/session/) to learn about authentication alternatives such as environment variables.
 
 If a master key is provided we first encrypt the plaintext data using the SFTPGo local provider and then we encrypt the resulting payload using the Cloud provider and store this ciphertext.
 
@@ -85,7 +87,7 @@ azurekeyvault://mykeyvaultname.vault.azure.net/keys/mykeyname
 
 The "azurekeyvault" URL scheme is replaced with "https" to construct an Azure Key Vault keyID, as described [here](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates). You can add an optional "/{key-version}" to the path to use a specific version of the key; it defaults to the latest version.
 
-SFTPGo will use the default credentials from the [environment](https://docs.microsoft.com/en-us/go/azure/azure-sdk-go-authorization#use-environment-based-authentication).
+This plugin will use the default credentials from the [environment](https://docs.microsoft.com/en-us/go/azure/azure-sdk-go-authorization#use-environment-based-authentication).
 
 If a master key is provided we first encrypt the plaintext data using the SFTPGo local provider and then we encrypt the resulting payload using the Cloud provider and store this ciphertext.
 

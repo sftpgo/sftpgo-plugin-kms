@@ -128,7 +128,7 @@ func getVersionString() string {
 }
 
 func main() {
-	appLogger.Info("starting sftpgo-kms-plugin", "version", getVersionString())
+	appLogger.Info("starting sftpgo-plugin-kms", "version", getVersionString())
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: kmsplugin.Handshake,
 		Plugins: map[string]plugin.Plugin{

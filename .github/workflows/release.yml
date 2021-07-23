@@ -30,11 +30,19 @@ jobs:
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-s -w -X main.commitHash=`git describe --always --dirty` -X main.date=`date -u +%FT%TZ`" -o bin/sftpgo-plugin-kms-darwin-amd64
           CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-s -w -X main.commitHash=`git describe --always --dirty` -X main.date=`date -u +%FT%TZ`" -o bin/sftpgo-plugin-kms-darwin-arm64
 
+      - name: Prepare vendored sources
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          go mod vendor
+          echo "${VERSION}" > VERSION.txt
+          tar --exclude=bin -cJvf sftpgo-plugin-kms_${VERSION}_src_with_deps.tar.xz *
+
       - name: Create release
         run: |
           VERSION=${GITHUB_REF/refs\/tags\//}
           gh release create "${VERSION}" -t "${VERSION}"
           gh release upload "${VERSION}" bin/* --clobber
+          gh release upload "${VERSION}" sftpgo-plugin-kms_${VERSION}_src_with_deps.tar.xz --clobber
           gh release view "${VERSION}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
