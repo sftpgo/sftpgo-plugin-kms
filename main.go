@@ -18,7 +18,7 @@ import (
 	kmsplugin "github.com/drakkan/sftpgo/v2/sdk/plugin/kms"
 )
 
-const version = "0.9.0-dev"
+const version = "1.0.1"
 
 var (
 	commitHash = ""
