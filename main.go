@@ -14,11 +14,13 @@ import (
 	_ "gocloud.dev/secrets/gcpkms"
 	_ "gocloud.dev/secrets/hashivault"
 
-	"github.com/drakkan/sftpgo/v2/kms"
-	kmsplugin "github.com/drakkan/sftpgo/v2/sdk/plugin/kms"
+	"github.com/sftpgo/sdk/kms"
+	kmsplugin "github.com/sftpgo/sdk/plugin/kms"
+
+	"github.com/sftpgo/sftpgo-plugin-kms/secret"
 )
 
-const version = "1.0.1"
+const version = "1.0.1-dev"
 
 var (
 	commitHash = ""
@@ -43,7 +45,10 @@ func (k *GoCloudKMS) Encrypt(payload, additionalData, URL, masterKey string) (st
 			Payload:        payload,
 			AdditionalData: additionalData,
 		}
-		localSecret := kms.NewLocalSecret(baseSecret, "", masterKey)
+		localSecret := secret.LocalSecret{
+			BaseSecret: baseSecret,
+			MasterKey:  masterKey,
+		}
 		err := localSecret.Encrypt()
 		if err != nil {
 			appLogger.Warn("unable to encrypt local secret", "error", err)
@@ -102,7 +107,10 @@ func (k *GoCloudKMS) Decrypt(payload, key, additionalData string, mode int, URL,
 			AdditionalData: additionalData,
 			Mode:           mode,
 		}
-		localSecret := kms.NewLocalSecret(baseSecret, "", masterKey)
+		localSecret := secret.LocalSecret{
+			BaseSecret: baseSecret,
+			MasterKey:  masterKey,
+		}
 		err = localSecret.Decrypt()
 		if err != nil {
 			appLogger.Warn("unable to decrypt local secret", "error", err)

@@ -14,6 +14,7 @@ The supported services can be configured within the `plugins` section of the SFT
 "kms": {
     "secrets": {
       "url": "hashivault://my-key",
+      "master_key": "",
       "master_key_path": ""
     }
 },
