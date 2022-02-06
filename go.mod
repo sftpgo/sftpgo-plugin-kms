@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/hashicorp/go-hclog v1.0.0
 	github.com/hashicorp/go-plugin v1.4.3
-	github.com/sftpgo/sdk v0.0.0-20220106101837-50e87c59705a
+	github.com/sftpgo/sdk v0.0.0-20220110174344-ecf586dd8941
 	gocloud.dev v0.24.0
 	gocloud.dev/secrets/hashivault v0.24.0
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
