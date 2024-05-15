@@ -1,4 +1,4 @@
-// Copyright (C) 2021-2023 Nicola Murino
+// Copyright (C) 2021 Nicola Murino
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
@@ -34,7 +34,7 @@ import (
 	"github.com/sftpgo/sftpgo-plugin-kms/secret"
 )
 
-const version = "1.0.10"
+const version = "1.0.11"
 
 var (
 	commitHash = ""

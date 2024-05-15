@@ -1,11 +1,11 @@
 module github.com/sftpgo/sftpgo-plugin-kms
 
-go 1.21.10
+go 1.22.2
 
 require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.6.1
-	github.com/sftpgo/sdk v0.1.6
+	github.com/sftpgo/sdk v0.1.7
 	gocloud.dev v0.37.0
 	gocloud.dev/secrets/hashivault v0.37.0
 	golang.org/x/crypto v0.23.0
@@ -24,7 +24,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.10.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.1 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2 // indirect
-	github.com/aws/aws-sdk-go v1.53.0 // indirect
+	github.com/aws/aws-sdk-go v1.53.2 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.26.1 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.27.13 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.13 // indirect
@@ -42,7 +42,7 @@ require (
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.2 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
@@ -93,6 +93,6 @@ require (
 	google.golang.org/genproto v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240513163218-0867130af1f8 // indirect
-	google.golang.org/grpc v1.63.2 // indirect
+	google.golang.org/grpc v1.64.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 )
