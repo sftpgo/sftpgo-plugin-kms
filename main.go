@@ -83,7 +83,7 @@ func (k *GoCloudKMS) Encrypt(payload, additionalData, URL, masterKey string) (st
 	}
 
 	defer keeper.Close()
-	ciphertext, err := keeper.Encrypt(context.Background(), []byte(payload))
+	ciphertext, err := keeper.Encrypt(ctx, []byte(payload))
 	if err != nil {
 		appLogger.Warn("unable to encrypt", "URL", URL, "error", err)
 		return "", "", 0, err
@@ -107,7 +107,7 @@ func (k *GoCloudKMS) Decrypt(payload, key, additionalData string, mode int, URL,
 	}
 
 	defer keeper.Close()
-	plaintext, err := keeper.Decrypt(context.Background(), encrypted)
+	plaintext, err := keeper.Decrypt(ctx, encrypted)
 	if err != nil {
 		appLogger.Warn("unable to decrypt", "URL", URL, "error", err)
 		return "", err
@@ -155,7 +155,7 @@ func main() {
 		HandshakeConfig: kmsplugin.Handshake,
 		Plugins: map[string]plugin.Plugin{
 			kmsplugin.PluginName: &kmsplugin.Plugin{Impl: &GoCloudKMS{
-				timeout: 10 * time.Second,
+				timeout: 15 * time.Second,
 			}},
 		},
 		GRPCServer: plugin.DefaultGRPCServer,
