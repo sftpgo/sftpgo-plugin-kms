@@ -109,3 +109,18 @@ In the configuration section `kms_options` set:
 
 - `scheme` to `hashivault`
 - `encrypted_status` to `VaultTransit`
+
+### Oracle Key Vault
+
+To use keys from [Oracle Key Vault](https://www.oracle.com/it/security/database-security/key-vault/), you have to set `ocikeyvault` as URL scheme like this: `ocikeyvault://my-key-id`.
+
+If you set the `auth_type_api_key` query parameter to `1` like this: `ocikeyvault://my-key-id?auth_type_api_key=1` the default [config provider](https://pkg.go.dev/github.com/oracle/oci-go-sdk/v65/common#DefaultConfigProvider) will be used, otherwise a configuration for the instance principals will be created.
+
+The Vault endpoint is specified using the environment variables `SFTPGO_PLUGIN_KMS_OCI_ENDPOINT`.
+
+If a master key is provided we first encrypt the plaintext data using the SFTPGo local provider and then we encrypt the resulting payload using Vault and store this ciphertext.
+
+In the configuration section `kms_options` set:
+
+- `scheme` to `ocikeyvault`
+- `encrypted_status` to `OracleKeyVault`

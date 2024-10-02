@@ -31,10 +31,11 @@ import (
 	"github.com/sftpgo/sdk/kms"
 	kmsplugin "github.com/sftpgo/sdk/plugin/kms"
 
+	"github.com/sftpgo/sftpgo-plugin-kms/provider"
 	"github.com/sftpgo/sftpgo-plugin-kms/secret"
 )
 
-const version = "1.0.11"
+const version = "1.0.12-dev"
 
 var (
 	commitHash = ""
@@ -76,13 +77,13 @@ func (k *GoCloudKMS) Encrypt(payload, additionalData, URL, masterKey string) (st
 	ctx, cancelFn := context.WithDeadline(context.Background(), time.Now().Add(k.timeout))
 	defer cancelFn()
 
-	keeper, err := secrets.OpenKeeper(ctx, URL)
+	keeper, err := getKeeper(ctx, URL)
 	if err != nil {
 		appLogger.Warn("unable to open keeper to encrypt", "URL", URL, "error", err)
 		return "", "", 0, err
 	}
-
 	defer keeper.Close()
+
 	ciphertext, err := keeper.Encrypt(ctx, []byte(payload))
 	if err != nil {
 		appLogger.Warn("unable to encrypt", "URL", URL, "error", err)
@@ -100,13 +101,13 @@ func (k *GoCloudKMS) Decrypt(payload, key, additionalData string, mode int, URL,
 	ctx, cancelFn := context.WithDeadline(context.Background(), time.Now().Add(k.timeout))
 	defer cancelFn()
 
-	keeper, err := secrets.OpenKeeper(ctx, URL)
+	keeper, err := getKeeper(ctx, URL)
 	if err != nil {
 		appLogger.Warn("unable to open keeper to decrypt", "URL", URL, "error", err)
 		return "", err
 	}
-
 	defer keeper.Close()
+
 	plaintext, err := keeper.Decrypt(ctx, encrypted)
 	if err != nil {
 		appLogger.Warn("unable to decrypt", "URL", URL, "error", err)
@@ -133,6 +134,13 @@ func (k *GoCloudKMS) Decrypt(payload, key, additionalData string, mode int, URL,
 		decrypted = localSecret.GetPayload()
 	}
 	return decrypted, nil
+}
+
+func getKeeper(ctx context.Context, URL string) (provider.Driver, error) {
+	if strings.HasPrefix(URL, "ocikeyvault://") {
+		return provider.NewOCIDriver(URL)
+	}
+	return secrets.OpenKeeper(ctx, URL)
 }
 
 func getVersionString() string {
