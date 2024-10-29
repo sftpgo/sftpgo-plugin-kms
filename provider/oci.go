@@ -16,6 +16,7 @@ package provider
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"net/url"
 	"os"
@@ -68,11 +69,11 @@ func NewOCIDriver(URL string) (*ociDriver, error) {
 	}, nil
 }
 
-func (d *ociDriver) Encrypt(ctx context.Context, plaintext []byte) (ciphertext []byte, err error) {
+func (d *ociDriver) Encrypt(ctx context.Context, plaintext []byte) ([]byte, error) {
 	resp, err := d.client.Encrypt(ctx, keymanagement.EncryptRequest{
 		EncryptDataDetails: keymanagement.EncryptDataDetails{
 			KeyId:     common.String(d.keyID),
-			Plaintext: common.String(string(plaintext)),
+			Plaintext: common.String(base64.StdEncoding.EncodeToString(plaintext)),
 		},
 		RequestMetadata: common.RequestMetadata{
 			RetryPolicy: d.retryPolicy,
@@ -84,7 +85,7 @@ func (d *ociDriver) Encrypt(ctx context.Context, plaintext []byte) (ciphertext [
 	return []byte(*resp.Ciphertext), nil
 }
 
-func (d *ociDriver) Decrypt(ctx context.Context, ciphertext []byte) (plaintext []byte, err error) {
+func (d *ociDriver) Decrypt(ctx context.Context, ciphertext []byte) ([]byte, error) {
 	resp, err := d.client.Decrypt(ctx, keymanagement.DecryptRequest{
 		DecryptDataDetails: keymanagement.DecryptDataDetails{
 			KeyId:      common.String(d.keyID),
@@ -97,7 +98,7 @@ func (d *ociDriver) Decrypt(ctx context.Context, ciphertext []byte) (plaintext [
 	if err != nil {
 		return nil, err
 	}
-	return []byte(*resp.Plaintext), nil
+	return base64.StdEncoding.DecodeString(*resp.Plaintext)
 }
 
 func (d *ociDriver) Close() error {
