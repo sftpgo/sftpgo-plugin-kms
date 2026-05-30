@@ -35,7 +35,7 @@ import (
 	"github.com/sftpgo/sftpgo-plugin-kms/secret"
 )
 
-const version = "1.0.17"
+const version = "1.0.18"
 
 var (
 	commitHash = ""
